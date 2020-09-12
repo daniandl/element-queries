@@ -1,7 +1,7 @@
-const path = require('path');
+const path = require('path')
 
-const { NODE_ENV, FILE_NAME } = process.env;
-const filename = `${FILE_NAME}${NODE_ENV === 'production' ? '.min' : ''}.js`;
+const { NODE_ENV, FILE_NAME } = process.env
+const filename = `${FILE_NAME}${NODE_ENV === 'production' ? '.min' : ''}.js`
 
 module.exports = {
   mode: NODE_ENV || 'development',
@@ -13,4 +13,4 @@ module.exports = {
     filename,
     libraryTarget: 'umd',
   },
-};
+}

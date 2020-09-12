@@ -3,4 +3,6 @@
 * @param {Number} a First number
 * @param {Number} b Second number
 */
-export const add = (a, b) => a + b;
+const add = (a, b) => a + b
+
+export default add
