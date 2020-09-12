@@ -4,6 +4,8 @@
   "description": "",
   "main": "lib/index.js",
   "scripts": {
+    "clean": "rimraf lib dist",
+    "build": "npm run clean && npm run build:commonjs && npm run build:umd && npm run build:umd:min",
     "build:commonjs": "babel src --out-dir lib",
     "build:umd": "cross-env FILE_NAME=element-queries webpack",
     "build:umd:min": "cross-env NODE_ENV=production npm run build:umd"
@@ -18,6 +20,7 @@
     "@commitlint/config-conventional": "^11.0.0",
     "cross-env": "^7.0.2",
     "husky": "^4.3.0",
+    "rimraf": "^3.0.2",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12"
   },
