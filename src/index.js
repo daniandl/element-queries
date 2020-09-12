@@ -3,6 +3,4 @@
 * @param {Number} a First number
 * @param {Number} b Second number
 */
-module.exports = function(a, b) {
-  return a + b;
-};
+export const add = (a, b) => a + b;
