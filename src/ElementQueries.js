@@ -17,15 +17,22 @@ export class ElementQueries {
     this.observer = new ResizeObserver(this.onResize.bind(this))
     this.elements = new WeakMap()
 
-    document.addEventListener('DOMContentLoaded', () => {
-      this.init()
-
-      this.domObserver = new MutationObserver(this.onDomMutation.bind(this))
-      this.domObserver.observe(document.body, { childList: true, subtree: true })
-    }, { once: true })
+    // wait for document load
+    if (/complete|interactive|loaded/.test(document.readyState)) {
+      this.onDocumentLoad()
+    } else {
+      document.addEventListener('DOMContentLoaded', this.onDocumentLoad.bind(this), { once: true })
+    }
   }
 
   // Internal
+  onDocumentLoad() {
+    this.init()
+
+    this.domObserver = new MutationObserver(this.onDomMutation.bind(this))
+    this.domObserver.observe(document.body, { childList: true, subtree: true })
+  }
+
   init() {
     const elements = document.querySelectorAll(`[${this.opts.htmlAttrBreakpoints}]`)
 
