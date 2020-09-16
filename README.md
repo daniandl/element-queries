@@ -71,6 +71,8 @@ Using Element Queries is easy, you can get going in three steps.
 **3.** Finally, create an instance of ElementQueries in your JavaScript code and let the magic begin. You can also pass custom options via an object.
 
 ```js
+import ElementQueries from 'element-queries' // if using npm
+
 const eq = new ElementQueries()
 
 // ...or pass in custom options
