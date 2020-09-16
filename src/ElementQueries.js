@@ -175,8 +175,9 @@ export class ElementQueries {
    * Disconnects all observers and clears element references
    */
   destroy() {
-    this.observer.disconnect()
-    this.domObserver.disconnect()
+    if (this.observer) this.observer.disconnect()
+    if (this.domObserver) this.domObserver.disconnect()
+
     this.elements = new WeakMap()
   }
 }
