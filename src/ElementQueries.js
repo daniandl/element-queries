@@ -10,7 +10,7 @@ const DEFAULT_OPTS = {
   htmlAttrActive: 'data-eq-active',
 }
 
-export class ElementQueries {
+export default class ElementQueries {
   constructor(opts) {
     this.opts = Object.freeze({ ...DEFAULT_OPTS, ...opts })
 

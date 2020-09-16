@@ -1,4 +1,6 @@
-export { ElementQueries } from './ElementQueries'
+import ElementQueries from './ElementQueries'
+
+export default ElementQueries
 
 /** TODOs
  * TODO move this out of here :)
