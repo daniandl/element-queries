@@ -129,7 +129,7 @@ Disconnects the ResizeObserver and DOM observer. Also flushes the internal eleme
 *These are for internal use only but you are welcome to play around with them (at your own risk)*
 * `opts` a frozen options object
 * `observer` contains the ResizeObserver
-* `elements` a WeakMap containing all elements that have are still actively being referenced
+* `elements` a WeakMap containing all elements that are still actively being referenced
 
 <!-- ## Motivation -->
 
