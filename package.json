@@ -3,7 +3,7 @@
   "version": "0.3.0",
   "description": "",
   "author": "Danian de Leeuw <danian.deleeuw@gmail.com>",
-  "license": "ISC",
+  "license": "MIT",
   "main": "lib/index.js",
   "scripts": {
     "clean": "rimraf lib dist",
