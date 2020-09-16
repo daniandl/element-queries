@@ -1,8 +1,24 @@
 {
   "name": "element-queries",
   "version": "0.3.0",
-  "description": "",
+  "description": "A responsive element queries library based on modern ResizeObserver technology.",
   "author": "Danian de Leeuw <danian.deleeuw@gmail.com>",
+  "keywords": [
+    "element-queries",
+    "responsive-components",
+    "javascript",
+    "resizeobserver",
+    "responsive",
+    "media-queries",
+    "queries",
+    "css"
+  ],
+  "bugs": "https://github.com/daniandl/element-queries/issues",
+  "homepage": "https://github.com/daniandl/element-queries#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/daniandl/element-queries.git"
+  },
   "license": "MIT",
   "main": "lib/index.js",
   "scripts": {
