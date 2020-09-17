@@ -141,6 +141,20 @@ export default class ElementQueries {
   }
 
   /**
+   * Manually remove an element from the observer and element reference
+   * @param {HTMLElement} element The DOM element you would like to remove
+   * @returns {Boolean} Whether the element has been removed successfully
+   */
+  unwatch(element) {
+    if (!element || !(element instanceof HTMLElement)) throw new Error(Errors.INVALID_ELEMENT)
+
+    this.elements.delete(element)
+    this.observer.unobserve(element)
+
+    return this.elements.has(element)
+  }
+
+  /**
    * Updates the given elements according to their internal state (eq.elements)
    * @param {Array} elements Array of DOM elements
    */
