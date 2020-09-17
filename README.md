@@ -71,7 +71,7 @@ Using Element Queries is easy, you can get going in three steps.
 **3.** Finally, create an instance of ElementQueries in your JavaScript code and let the magic begin. You can also pass custom options via an object.
 
 ```js
-import ElementQueries from 'element-queries' // if using npm
+import ElementQueries from 'element-queries' // if using a package manager
 
 const eq = new ElementQueries()
 
@@ -99,8 +99,7 @@ These are options you can pass as an object when creating a new instance of `Ele
 :--|:--|:--|--:
 `htmlAttrBreakpoints`|(String) The name of the HTML attribute you would like to write your breakpoints in.|`data-eq-breakpoints`|![npm](https://img.shields.io/badge/-v0.3.0+-orange?style=flat-square)
 `htmlAttrActive`|(String) The name of the HTML attribute that you will use in your CSS selectors.|`data-eq-active`|![npm](https://img.shields.io/badge/-v0.3.0+-orange?style=flat-square)
-
-<!-- `observeDom`|(Boolean) Whether the plugin should watch the DOM for new elements to observe.|`true`|  -->
+`observeDom`|(Boolean) Whether the plugin should watch the DOM for new elements to observe.|`true`| ![npm](https://img.shields.io/badge/-v0.4.0+-orange?style=flat-square)
 
 ## API
 
@@ -110,11 +109,22 @@ These are options you can pass as an object when creating a new instance of `Ele
 
 Used to manually add an element to the observer. Must have valid breakpoints.
 
+### unwatch(element) ![npm](https://img.shields.io/badge/-v0.4.0+-orange?style=flat-square)
+
+* `element` {`HTMLElement`} The DOM element you would like to remove
+* @returns {`Boolean`}  Whether the element has been removed successfully
+
+Manually remove an element from the observer and element reference.
+
 ### update(elements) ![npm](https://img.shields.io/badge/-v0.3.0+-orange?style=flat-square)
 
 * `elements` {`Array`} Array of DOM elements
 
 Force-update the given elements according to their internal state. You should not have to use this.
+
+### query() ![npm](https://img.shields.io/badge/-v0.4.0+-orange?style=flat-square)
+
+Finds all elements with breakpoints (according to `htmlAttrBreakpoints` option) and watches them.
 
 ### destroy() ![npm](https://img.shields.io/badge/-v0.3.0+-orange?style=flat-square)
 
@@ -129,6 +139,7 @@ Disconnects the ResizeObserver and DOM observer. Also flushes the internal eleme
 *These are for internal use only but you are welcome to play around with them (at your own risk)*
 * `opts` a frozen options object
 * `observer` contains the ResizeObserver
+* `domObserver` contains the MutationObserver (if enabled)
 * `elements` a WeakMap containing all elements that are still actively being referenced
 
 <!-- ## Motivation -->
