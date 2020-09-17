@@ -8,6 +8,7 @@ import {
 
 export default class ElementQueries {
   constructor(opts) {
+    this.initialized = false
     this.opts = Object.freeze({ ...DEFAULT_OPTS, ...opts })
 
     this.observer = new ResizeObserver(this.onResize.bind(this))
@@ -15,30 +16,21 @@ export default class ElementQueries {
 
     // wait for document load
     if (/complete|interactive|loaded/.test(document.readyState)) {
-      this.onDocumentLoad()
+      this.init()
     } else {
-      document.addEventListener('DOMContentLoaded', this.onDocumentLoad.bind(this), { once: true })
+      document.addEventListener('DOMContentLoaded', this.init.bind(this), { once: true })
     }
   }
 
   // Internal
-  onDocumentLoad() {
-    this.init()
+  init() {
+    if (this.initialized) throw new Error(Errors.ALREADY_INIT)
+    this.initialized = true
 
     this.domObserver = new MutationObserver(this.onDomMutation.bind(this))
     this.domObserver.observe(document.body, { childList: true, subtree: true })
-  }
 
-  init() {
-    const elements = document.querySelectorAll(`[${this.opts.htmlAttrBreakpoints}]`)
-
-    for (const element of elements) {
-      try {
-        this.watch(element)
-      } catch (error) {
-        console.error(error, element)
-      }
-    }
+    this.query()
   }
 
   onResize(entries) {
@@ -204,6 +196,7 @@ export default class ElementQueries {
     if (this.observer) this.observer.disconnect()
     if (this.domObserver) this.domObserver.disconnect()
 
+    this.initialized = false
     this.elements = new WeakMap()
   }
 }
