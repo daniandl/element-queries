@@ -98,6 +98,22 @@ export default class ElementQueries {
   }
 
   // Methods & Helpers
+
+  /**
+   * Finds all elements with breakpoints and watches them
+   */
+  query() {
+    const elements = document.querySelectorAll(`[${this.opts.htmlAttrBreakpoints}]`)
+
+    for (const element of elements) {
+      try {
+        this.watch(element)
+      } catch (error) {
+        console.error(error, element)
+      }
+    }
+  }
+
   /**
    * Watch an element manually
    * @param {HTMLElement} element The DOM element you would like to watch
