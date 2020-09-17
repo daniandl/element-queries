@@ -27,8 +27,10 @@ export default class ElementQueries {
     if (this.initialized) throw new Error(Errors.ALREADY_INIT)
     this.initialized = true
 
-    this.domObserver = new MutationObserver(this.onDomMutation.bind(this))
-    this.domObserver.observe(document.body, { childList: true, subtree: true })
+    if (this.opts.observeDom) {
+      this.domObserver = new MutationObserver(this.onDomMutation.bind(this))
+      this.domObserver.observe(document.body, { childList: true, subtree: true })
+    }
 
     this.query()
   }

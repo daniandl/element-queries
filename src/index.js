@@ -7,7 +7,6 @@ export default ElementQueries
  * TODO allow passing breakpoint object to .watch() which overrides htmlAttrBreakpoints
  * TODO Support HTMLElement *AND* SVGElement
  * TODO disable if ResizeObserver isnt supported
- * TODO config option: dom observing on/off
  * NOTE general browser-support checks (MutationObserver, etc)
  * NOTE batching resize updates?
  * NOTE throttle observer?
