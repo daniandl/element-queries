@@ -1,6 +1,6 @@
 {
   "name": "element-queries",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "A responsive element queries library based on modern ResizeObserver technology.",
   "author": "Danian de Leeuw <danian.deleeuw@gmail.com>",
   "keywords": [
