@@ -1,14 +1,10 @@
 import {
   BREAKPOINT_REGEX,
+  DEFAULT_OPTS,
+  Errors,
   removeWhitespace,
   flipObject,
-  Errors,
 } from './utils'
-
-const DEFAULT_OPTS = {
-  htmlAttrBreakpoints: 'data-eq-breakpoints',
-  htmlAttrActive: 'data-eq-active',
-}
 
 export default class ElementQueries {
   constructor(opts) {
