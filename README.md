@@ -1,13 +1,18 @@
-# Element Queries ![npm](https://img.shields.io/npm/v/element-queries?label=%20&style=for-the-badge)
+# Element Queries
 
 ![npm](https://img.shields.io/npm/v/element-queries?style=flat-square)
-![npm bundle size](https://img.shields.io/bundlephobia/minzip/element-queries?label=gzip&style=flat-square)
 ![GitHub issues](https://img.shields.io/github/issues/daniandl/element-queries?style=flat-square)
 ![npm](https://img.shields.io/npm/dm/element-queries?style=flat-square)
 ![GitHub stars](https://img.shields.io/github/stars/daniandl/element-queries?logo=github&style=flat-square)
 
-A modern approach to Element Queries using a ResizeObserver instead of relying on polling or user-interactions.
-##### ⚠ Element Queries is in its early stages, I do not recommend using this in production yet.
+A modern approach to element queries using a ResizeObserver instead of relying on polling or user-interactions.
+
+- **Performant**: No polling/loops due to native ResizeObserver use
+- **Small**: under 2kb (minified + gzip)
+- **Easy to use**: doesn't introduce new syntax + simple API
+- **Customizable**: change naming conventions to your liking
+
+This readme reflects the functionality of the **current major version (1.x.x)**
 
 ## Installation
 
@@ -15,7 +20,7 @@ A modern approach to Element Queries using a ResizeObserver instead of relying o
 Use your favourite package manager to install `element-queries`.
 
 ```bash
-$ npm install element-queries
+$ npm install --save element-queries
 
 $ yarn add element-queries
 ```
@@ -23,8 +28,7 @@ $ yarn add element-queries
 **Via script tag**  
 You will find UMD bundles under the `dist/` directory. You can download the minified code and include it in your website's `<body>`.
  
-Services like unpkg and jsDelivr can also be used, as long as you point to the correct file:  
-**Unpkg:** `https://unpkg.com/element-queries@latest/dist/element-queries.min.js`  
+Also available via:  
 **jsDelivr:** `https://cdn.jsdelivr.net/npm/element-queries@latest/dist/element-queries.min.js`  
 
 (`ElementQueries` will be available under the `window` object)
@@ -47,6 +51,9 @@ Using Element Queries is easy, you can get going in three steps.
 <!-- You can use whatever breakpoint names you like -->
 <div data-eq-breakpoints="sm: 300, md: 600, lg: 900">...</div>
 
+<!-- breakpoints based on element height -->
+<div data-eq-height-breakpoints="sm: 50, md: 200, lg: 500">...</div>
+
 <!-- Change the attribute name via options -->
 <div data-bps="xs: 300, sm: 600, md: 900">...</div>
 ```
@@ -60,6 +67,11 @@ Using Element Queries is easy, you can get going in three steps.
 
 .post[data-eq-active="medium"] h2 {
   font-size: 1rem;
+}
+
+/* breakpoints based on element height */
+.post[data-height-active="large"] h2 {
+  font-size: 1.5rem;
 }
 
 /* You can change the attribute name via options */
@@ -83,50 +95,56 @@ const eq = new ElementQueries({
 })
 ```
 
-#### That's it!
-You are now using element queries on your website, now go make it look pretty!
-
-##### Using a framework or adding elements dynamically after page load?
-Element Queries will detect these automatically as they are added and observe them as long as they have valid breakpoints.
-<!-- This can also be disabled via options. -->
+**That's it!** You are now using element queries on your website, now go make it look pretty!
 
 <!-- ## How it works -->
+
+## FAQ
+
+#### My elements are added dynamically/after page load (ie. framework), will this pick them up?
+ElementQueries will detect these automatically as they are added and observe them as long as they have valid breakpoints.
+You can also turn this off and write your own wrapper by using the `.watch()` and `.unwatch()` methods.
+
+#### What type of elements can I put breakpoints on?
+The library technically supports all elements the `ResizeObserver` can watch. This means `HTMLElements` and `SVGElements` (path, rect, etc.. - *not the `<svg>` tag*).
 
 ## Options
 These are options you can pass as an object when creating a new instance of `ElementQueries`.
 
 **Property**|**Description**|**Default**|**Version**
 :--|:--|:--|--:
-`htmlAttrBreakpoints`|(String) The name of the HTML attribute you would like to write your breakpoints in.|`data-eq-breakpoints`|![npm](https://img.shields.io/badge/-v0.3.0+-orange?style=flat-square)
-`htmlAttrActive`|(String) The name of the HTML attribute that you will use in your CSS selectors.|`data-eq-active`|![npm](https://img.shields.io/badge/-v0.3.0+-orange?style=flat-square)
-`observeDom`|(Boolean) Whether the plugin should watch the DOM for new elements to observe.|`true`| ![npm](https://img.shields.io/badge/-v0.4.0+-orange?style=flat-square)
+`htmlAttrBreakpoints`|(String) The name of the HTML attribute you would like to write your breakpoints in.|`data-eq-breakpoints`|![npm](https://img.shields.io/badge/-v1.0+-orange?style=flat-square)
+`htmlAttrHeightBreakpoints`|(String) Same as above, for height.|`data-eq-height-breakpoints`|![npm](https://img.shields.io/badge/-v1.0+-orange?style=flat-square)
+`htmlAttrActive`|(String) The name of the HTML attribute that you will use in your CSS selectors.|`data-eq-active`|![npm](https://img.shields.io/badge/-v1.0+-orange?style=flat-square)
+`htmlAttrHeightActive`|(String) Same as above, for height.|`data-eq-height-active`|![npm](https://img.shields.io/badge/-v1.0+-orange?style=flat-square)
+`observeDom`|(Boolean) Whether the plugin should watch the DOM for new elements to observe.|`true`|![npm](https://img.shields.io/badge/-v1.0+-orange?style=flat-square)
 
 ## API
 
-### watch(element) ![npm](https://img.shields.io/badge/-v0.3.0+-orange?style=flat-square)
+### watch(element) ![npm](https://img.shields.io/badge/-v1.0+-orange?style=flat-square)
 
 * `element` {`HTMLElement`} A dom element you'd like to observe
 
 Used to manually add an element to the observer. Must have valid breakpoints.
 
-### unwatch(element) ![npm](https://img.shields.io/badge/-v0.4.0+-orange?style=flat-square)
+### unwatch(element) ![npm](https://img.shields.io/badge/-v1.0+-orange?style=flat-square)
 
 * `element` {`HTMLElement`} The DOM element you would like to remove
 * @returns {`Boolean`}  Whether the element has been removed successfully
 
 Manually remove an element from the observer and element reference.
 
-### update(elements) ![npm](https://img.shields.io/badge/-v0.3.0+-orange?style=flat-square)
+### update(elements) ![npm](https://img.shields.io/badge/-v1.0+-orange?style=flat-square)
 
 * `elements` {`Array`} Array of DOM elements
 
 Force-update the given elements according to their internal state. You should not have to use this.
 
-### query() ![npm](https://img.shields.io/badge/-v0.4.0+-orange?style=flat-square)
+### query() ![npm](https://img.shields.io/badge/-v1.0+-orange?style=flat-square)
 
 Finds all elements with breakpoints (according to `htmlAttrBreakpoints` option) and watches them.
 
-### destroy() ![npm](https://img.shields.io/badge/-v0.3.0+-orange?style=flat-square)
+### destroy() ![npm](https://img.shields.io/badge/-v1.0+-orange?style=flat-square)
 
 Disconnects the ResizeObserver and DOM observer. Also flushes the internal elements reference.
 
