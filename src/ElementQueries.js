@@ -14,6 +14,12 @@ const DIRECTION_TO_ACTIVE_ATTR = {
 
 export default class ElementQueries {
   constructor(opts) {
+    if (!('ResizeObserver' in window)) {
+      // not throwing to avoid breaking client's apps
+      console.error(Errors.NOT_SUPPORTED)
+      return
+    }
+
     this.initialized = false
     this.opts = Object.freeze({ ...DEFAULT_OPTS, ...opts })
 
@@ -34,8 +40,12 @@ export default class ElementQueries {
     this.initialized = true
 
     if (this.opts.observeDom) {
-      this.domObserver = new MutationObserver(this.onDomMutation.bind(this))
-      this.domObserver.observe(document.body, { childList: true, subtree: true })
+      if (!('MutationObserver' in window)) {
+        console.error(Errors.NOT_SUPPORTED_OBSERVE)
+      } else {
+        this.domObserver = new MutationObserver(this.onDomMutation.bind(this))
+        this.domObserver.observe(document.body, { childList: true, subtree: true })
+      }
     }
 
     this.query()

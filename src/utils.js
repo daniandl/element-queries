@@ -2,6 +2,8 @@
 export const BREAKPOINT_REGEX = /([_A-z]+[A-z0-9-_]+):(\d+)/g
 
 export const Errors = {
+  NOT_SUPPORTED: 'ElementQueries is not supported by this browser.',
+  NOT_SUPPORTED_OBSERVE: 'The "observeDom" option is not supported by this browser.',
   INVALID_ELEMENT: 'Please provide an HTML or SVG element.',
   INVALID_ELEMENTS: 'Please provide an array of valid elements (HTML/SVG).',
   BREAKPOINTS_MISSING: 'No breakpoints found on element.',
