@@ -4,6 +4,7 @@ import {
   Errors,
   removeWhitespace,
   flipObject,
+  isValidElement,
 } from './utils'
 
 export default class ElementQueries {
@@ -51,7 +52,10 @@ export default class ElementQueries {
           height = borderBoxSize[0].blockSize
         } else {
           // fallback for Safari
-          const rect = element.getBoundingClientRect()
+          const rect = element instanceof SVGElement
+            ? element.getBBox()
+            : element.getBoundingClientRect()
+
           width = rect.width
           height = rect.height
         }
@@ -72,10 +76,8 @@ export default class ElementQueries {
         // eslint-disable-next-line no-var
         for (var k = mutations[i].addedNodes.length - 1; k >= 0; k--) {
           const element = mutations[i].addedNodes[k]
-          if (
-            element instanceof HTMLElement
-            && element.hasAttribute(this.opts.htmlAttrBreakpoints)
-          ) {
+
+          if (isValidElement(element) && element.hasAttribute(this.opts.htmlAttrBreakpoints)) {
             try {
               this.watch(element)
             } catch (e) {
@@ -106,10 +108,13 @@ export default class ElementQueries {
 
   /**
    * Watch an element manually
-   * @param {HTMLElement} element The DOM element you would like to watch
+   * @param {HTMLElement, SVGElement} element The DOM element you would like to watch
    */
   watch(element) {
-    if (!element || !(element instanceof HTMLElement)) throw new Error(Errors.INVALID_ELEMENT)
+    if (!element || !isValidElement(element)) {
+      throw new Error(Errors.INVALID_ELEMENT)
+    }
+
     if (!element.hasAttribute(this.opts.htmlAttrBreakpoints)) {
       throw new Error(Errors.BREAKPOINTS_MISSING)
     }
@@ -117,7 +122,9 @@ export default class ElementQueries {
     const breakpointString = removeWhitespace(element.getAttribute(this.opts.htmlAttrBreakpoints))
     const breakpointMatches = [...breakpointString.matchAll(BREAKPOINT_REGEX)]
 
-    if (!breakpointMatches.length) throw new Error(Errors.BREAKPOINTS_MISSING)
+    if (!breakpointMatches.length) {
+      throw new Error(Errors.BREAKPOINTS_MISSING)
+    }
 
     const breakpoints = breakpointMatches.reduce((acc, match) => {
       if (!match[1] || !match[2]) return acc
@@ -132,11 +139,11 @@ export default class ElementQueries {
 
   /**
    * Manually remove an element from the observer and element reference
-   * @param {HTMLElement} element The DOM element you would like to remove
+   * @param {HTMLElement, SVGElement} element The DOM element you would like to remove
    * @returns {Boolean} Whether the element has been removed successfully
    */
   unwatch(element) {
-    if (!element || !(element instanceof HTMLElement)) throw new Error(Errors.INVALID_ELEMENT)
+    if (!element || !isValidElement(element)) throw new Error(Errors.INVALID_ELEMENT)
 
     this.elements.delete(element)
     this.observer.unobserve(element)
@@ -153,7 +160,7 @@ export default class ElementQueries {
       !elements
       || !Array.isArray(elements)
       || !elements.length
-      || !elements.every(el => el instanceof HTMLElement)
+      || !elements.every(el => isValidElement(el))
     ) throw new Error(Errors.INVALID_ELEMENTS)
 
     // eslint-disable-next-line no-var
