@@ -21,6 +21,7 @@
   },
   "license": "MIT",
   "main": "lib/index.js",
+  "files": ["dist/*", "lib/*"],
   "scripts": {
     "clean": "rimraf lib dist",
     "build": "npm run clean && npm run build:commonjs && npm run build:umd && npm run build:umd:min",
