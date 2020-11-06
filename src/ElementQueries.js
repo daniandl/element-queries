@@ -7,6 +7,11 @@ import {
   isValidElement,
 } from './utils'
 
+const DIRECTION_TO_ACTIVE_ATTR = {
+  width: 'htmlAttrActive',
+  height: 'htmlAttrHeightActive',
+}
+
 export default class ElementQueries {
   constructor(opts) {
     this.initialized = false
@@ -60,8 +65,8 @@ export default class ElementQueries {
           height = rect.height
         }
 
-        const elementsEntry = this.elements.get(element)
-        this.elements.set(element, { ...elementsEntry, ...{ width, height } })
+        const entry = this.elements.get(element)
+        this.elements.set(element, { ...entry, ...{ width, height } })
         toUpdate.add(element)
       }
     }
@@ -70,6 +75,8 @@ export default class ElementQueries {
   }
 
   onDomMutation(mutations) {
+    const { htmlAttrBreakpoints, htmlAttrHeightBreakpoints } = this.opts
+
     // eslint-disable-next-line no-var
     for (var i = mutations.length - 1; i >= 0; i--) {
       if (mutations[i].addedNodes.length) {
@@ -77,7 +84,10 @@ export default class ElementQueries {
         for (var k = mutations[i].addedNodes.length - 1; k >= 0; k--) {
           const element = mutations[i].addedNodes[k]
 
-          if (isValidElement(element) && element.hasAttribute(this.opts.htmlAttrBreakpoints)) {
+          const hasBreakpoints = element.getAttributeNames()
+            .some(attr => [htmlAttrBreakpoints, htmlAttrHeightBreakpoints].includes(attr))
+
+          if (isValidElement(element) && hasBreakpoints) {
             try {
               this.watch(element)
             } catch (e) {
@@ -95,7 +105,12 @@ export default class ElementQueries {
    * Finds all elements with breakpoints and watches them
    */
   query() {
-    const elements = document.querySelectorAll(`[${this.opts.htmlAttrBreakpoints}]`)
+    const { htmlAttrBreakpoints, htmlAttrHeightBreakpoints } = this.opts
+
+    const attrs = [htmlAttrBreakpoints, htmlAttrHeightBreakpoints]
+    const elements = document.querySelectorAll(attrs.map(i => `[${i}]`).join(','))
+
+    console.log(elements)
 
     for (const element of elements) {
       try {
@@ -111,27 +126,40 @@ export default class ElementQueries {
    * @param {HTMLElement, SVGElement} element The DOM element you would like to watch
    */
   watch(element) {
+    const { htmlAttrBreakpoints, htmlAttrHeightBreakpoints } = this.opts
+
     if (!element || !isValidElement(element)) {
       throw new Error(Errors.INVALID_ELEMENT)
     }
 
-    if (!element.hasAttribute(this.opts.htmlAttrBreakpoints)) {
+    const breakpointAttrs = {
+      width: element.getAttribute(htmlAttrBreakpoints),
+      height: element.getAttribute(htmlAttrHeightBreakpoints),
+    }
+
+    if (!Object.values(breakpointAttrs).filter(Boolean).length) {
       throw new Error(Errors.BREAKPOINTS_MISSING)
     }
 
-    const breakpointString = removeWhitespace(element.getAttribute(this.opts.htmlAttrBreakpoints))
-    const breakpointMatches = [...breakpointString.matchAll(BREAKPOINT_REGEX)]
+    const breakpoints = Object.entries(breakpointAttrs).reduce((acc, [k, v]) => {
+      if (!v) return acc
 
-    if (!breakpointMatches.length) {
-      throw new Error(Errors.BREAKPOINTS_MISSING)
-    }
+      const matches = [...removeWhitespace(v).matchAll(BREAKPOINT_REGEX)]
+      if (!matches) return acc
 
-    const breakpoints = breakpointMatches.reduce((acc, match) => {
-      if (!match[1] || !match[2]) return acc
+      acc[k] = matches.reduce((accumulator, match) => {
+        if (!match[1] || !match[2]) return accumulator
 
-      acc[match[1]] = +match[2]
+        accumulator[match[1]] = +match[2]
+        return accumulator
+      }, {})
+
       return acc
     }, {})
+
+    if (!Object.values(breakpoints).filter(Boolean).length) {
+      throw new Error(Errors.BREAKPOINTS_MISSING)
+    }
 
     this.elements.set(element, { breakpoints })
     this.observer.observe(element, { box: 'border-box' })
@@ -168,33 +196,20 @@ export default class ElementQueries {
       const element = elements[i]
 
       const entry = this.elements.get(element)
-      if (entry && entry.breakpoints) {
-        const { width } = entry
-        let active = null
+      if (!entry || !ElementQueries.hasBreakpoints(entry)) return
 
-        const bpsFlipped = flipObject(entry.breakpoints)
-        const bpWidths = Object.values(entry.breakpoints).sort() // sort ASC
-        const bpLargest = bpWidths[bpWidths.length - 1]
+      const activeBreakpoints = Object.entries(entry.breakpoints).reduce((acc, [k, bps]) => {
+        acc[k] = ElementQueries.getActiveBreakpoint(entry[k], bps)
+        return acc
+      }, {})
 
-        if (width >= bpLargest) {
-          active = bpsFlipped[bpLargest]
-        } else if (width > bpWidths[0]) {
-          for (let k = 0; k < bpWidths.length; k++) {
-            const bpWidth = bpWidths[k]
-
-            if (width >= bpWidth) {
-              active = bpsFlipped[bpWidth]
-            }
-          }
-        }
-
+      for (const [k, active] of Object.entries(activeBreakpoints)) {
         if (active) {
-          element.setAttribute(this.opts.htmlAttrActive, active)
-          continue
+          element.setAttribute(this.opts[DIRECTION_TO_ACTIVE_ATTR[k]], active)
+        } else {
+          element.removeAttribute(this.opts[DIRECTION_TO_ACTIVE_ATTR[k]])
         }
       }
-
-      element.removeAttribute(this.opts.htmlAttrActive)
     }
   }
 
@@ -207,5 +222,34 @@ export default class ElementQueries {
 
     this.initialized = false
     this.elements = new WeakMap()
+  }
+
+  // internal
+
+  static hasBreakpoints(entry) {
+    return Object.values(entry.breakpoints).filter(Boolean).length > 0
+  }
+
+  static getActiveBreakpoint(value, bps) {
+    const breakpoints = { ...bps, ...flipObject(bps) }
+    const sortedBreakpoints = Object.values(bps).sort() // sort ASC
+    const largestBreakpoint = sortedBreakpoints[sortedBreakpoints.length - 1]
+
+    if (value >= largestBreakpoint) {
+      return breakpoints[largestBreakpoint]
+    }
+
+    let active = null
+    if (value > sortedBreakpoints[0]) {
+      for (let k = 0; k < sortedBreakpoints.length; k++) {
+        const breakpointVal = sortedBreakpoints[k]
+
+        if (value >= breakpointVal) {
+          active = breakpoints[breakpointVal]
+        }
+      }
+    }
+
+    return active
   }
 }

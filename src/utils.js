@@ -11,6 +11,8 @@ export const Errors = {
 export const DEFAULT_OPTS = {
   htmlAttrBreakpoints: 'data-eq-breakpoints',
   htmlAttrActive: 'data-eq-active',
+  htmlAttrHeightBreakpoints: 'data-eq-height-breakpoints',
+  htmlAttrHeightActive: 'data-eq-height-active',
   observeDom: true,
 }
 
