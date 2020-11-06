@@ -1,6 +1,6 @@
 {
   "name": "element-queries",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "description": "A responsive element queries library based on modern ResizeObserver technology.",
   "author": "Danian de Leeuw <danian.deleeuw@gmail.com>",
   "keywords": [
@@ -21,7 +21,10 @@
   },
   "license": "MIT",
   "main": "lib/index.js",
-  "files": ["dist/*", "lib/*"],
+  "files": [
+    "dist/*",
+    "lib/*"
+  ],
   "scripts": {
     "clean": "rimraf lib dist",
     "build": "npm run clean && npm run build:commonjs && npm run build:umd && npm run build:umd:min",
