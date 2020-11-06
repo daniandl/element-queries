@@ -1,0 +1,12 @@
+Todo:
+ ☐ allow passing breakpoint object to .watch() which overrides htmlAttrBreakpoints
+ ☐ Support SVG elements
+ ☐ throw error if ResizeObservers arent supported
+
+Notes:
+  - general browser-support checks (MutationObserver, etc)
+  - batching resize updates?
+  - throttle observer?
+  - debounce updates on a per-element basis?
+  - use requestAnimationFrame on resize callback?
+  - what do if user changes htmlAttrBreakpoints dynamically
