@@ -14,6 +14,12 @@ A modern approach to element queries using a ResizeObserver instead of relying o
 
 This readme reflects the functionality of the **current major version (1.x.x)**
 
+#### **Browser Support**
+
+Due to ResizeObserver, Internet Explorer is not supported at all.
+You can use a polyfill but I cannot guarantee anything.  
+*More specific information will come soon.*
+
 ## Installation
 
 **Using NPM / Yarn**  
@@ -70,12 +76,12 @@ Using Element Queries is easy, you can get going in three steps.
 }
 
 /* breakpoints based on element height */
-.post[data-height-active="large"] h2 {
+.post[data-eq-height-active="large"] h2 {
   font-size: 1.5rem;
 }
 
 /* You can change the attribute name via options */
-.post[data-active-breakpoint="large"] h2 {
+.post[data-active-bp="large"] h2 {
   font-size: 1.5rem;
 }
 ```
