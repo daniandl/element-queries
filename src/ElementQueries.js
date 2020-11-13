@@ -3,6 +3,7 @@ import {
   DEFAULT_OPTS,
   Errors,
   removeWhitespace,
+  prefixLog,
   flipObject,
   isValidElement,
 } from './utils'
@@ -16,7 +17,7 @@ export default class ElementQueries {
   constructor(opts) {
     if (!('ResizeObserver' in window)) {
       // not throwing to avoid breaking client's apps
-      console.error(Errors.NOT_SUPPORTED)
+      console.error(prefixLog(Errors.NOT_SUPPORTED))
       return
     }
 
@@ -41,7 +42,7 @@ export default class ElementQueries {
 
     if (this.opts.observeDom) {
       if (!('MutationObserver' in window)) {
-        console.error(Errors.NOT_SUPPORTED_OBSERVE)
+        console.error(prefixLog(Errors.NOT_SUPPORTED_OBSERVE))
       } else {
         this.domObserver = new MutationObserver(this.onDomMutation.bind(this))
         this.domObserver.observe(document.body, { childList: true, subtree: true })
@@ -100,8 +101,8 @@ export default class ElementQueries {
           if (isValidElement(element) && hasBreakpoints) {
             try {
               this.watch(element)
-            } catch (e) {
-              console.error(e, element)
+            } catch (error) {
+              console.error(prefixLog(error), element)
             }
           }
         }
@@ -120,13 +121,11 @@ export default class ElementQueries {
     const attrs = [htmlAttrBreakpoints, htmlAttrHeightBreakpoints]
     const elements = document.querySelectorAll(attrs.map(i => `[${i}]`).join(','))
 
-    console.log(elements)
-
     for (const element of elements) {
       try {
         this.watch(element)
       } catch (error) {
-        console.error(error, element)
+        console.error(prefixLog(error), element)
       }
     }
   }
@@ -143,7 +142,7 @@ export default class ElementQueries {
 
     if (bps) {
       if (this.opts.observeDom) {
-        console.warn(Errors.DOM_OBSERVE_CONFLICT)
+        console.warn(prefixLog(Errors.DOM_OBSERVE_CONFLICT))
       }
 
       if (typeof bps !== 'object' || (!bps.width && !bps.height)) {

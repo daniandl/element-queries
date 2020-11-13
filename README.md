@@ -86,7 +86,7 @@ Using Element Queries is easy, you can get going in three steps.
 }
 ```
 
-**3.** Finally, create an instance of ElementQueries in your JavaScript code and let the magic begin. You can also pass custom options via an object.
+**3.** Finally, create an instance of Element Queries in your JavaScript code and let the magic begin. You can also pass custom options via an object.
 
 ```js
 import ElementQueries from 'element-queries' // if using a package manager
@@ -108,7 +108,7 @@ const eq = new ElementQueries({
 ## FAQ
 
 #### My elements are added dynamically/after page load (ie. framework), will this pick them up?
-ElementQueries will detect these automatically as they are added and observe them as long as they have valid breakpoints.
+Element Queries will detect these automatically as they are added and observe them as long as they have valid breakpoints.
 You can also turn this off and write your own wrapper by using the `.watch()` and `.unwatch()` methods.
 
 #### What type of elements can I put breakpoints on?
