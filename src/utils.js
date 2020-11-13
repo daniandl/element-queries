@@ -7,7 +7,9 @@ export const Errors = {
   INVALID_ELEMENT: 'Please provide an HTML or SVG element.',
   INVALID_ELEMENTS: 'Please provide an array of valid elements (HTML/SVG).',
   BREAKPOINTS_MISSING: 'No breakpoints found on element.',
+  BREAKPOINTS_INVALID: 'Invalid breakpoint overrides provided.',
   ALREADY_INIT: 'This instance is already initialized, please .destroy() it first.',
+  DOM_OBSERVE_CONFLICT: 'You are using custom breakpoint overrides with the "obserDom" option enabled. This can have negative side-effects.',
 }
 
 export const DEFAULT_OPTS = {

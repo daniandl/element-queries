@@ -121,11 +121,14 @@ These are options you can pass as an object when creating a new instance of `Ele
 
 ## API
 
-### watch(element) ![npm](https://img.shields.io/badge/-v1.0+-orange?style=flat-square)
+### watch(element, [breakpoints]) ![npm](https://img.shields.io/badge/-v1.0+-orange?style=flat-square)
 
 * `element` {`HTMLElement`} A dom element you'd like to observe
+* `[breakpoints]` {`Object`} an optional breakpoints object to use instead of html attributes.
 
-Used to manually add an element to the observer. Must have valid breakpoints.
+Used to manually add an element to the observer. Must have valid breakpoints.  
+Custom breakpoints format: `{ width: { small: 250, ...}, height: {...} }`  
+(Only one is *required*)
 
 ### unwatch(element) ![npm](https://img.shields.io/badge/-v1.0+-orange?style=flat-square)
 

@@ -134,38 +134,24 @@ export default class ElementQueries {
   /**
    * Watch an element manually
    * @param {HTMLElement, SVGElement} element The DOM element you would like to watch
+   * @param {Object} [bps] breakpoints to use instead of looking in html attributes
    */
-  watch(element) {
-    const { htmlAttrBreakpoints, htmlAttrHeightBreakpoints } = this.opts
-
+  watch(element, bps = null) {
     if (!element || !isValidElement(element)) {
       throw new Error(Errors.INVALID_ELEMENT)
     }
 
-    const breakpointAttrs = {
-      width: element.getAttribute(htmlAttrBreakpoints),
-      height: element.getAttribute(htmlAttrHeightBreakpoints),
+    if (bps) {
+      if (this.opts.observeDom) {
+        console.warn(Errors.DOM_OBSERVE_CONFLICT)
+      }
+
+      if (typeof bps !== 'object' || (!bps.width && !bps.height)) {
+        throw new Error(Errors.BREAKPOINTS_INVALID)
+      }
     }
 
-    if (!Object.values(breakpointAttrs).filter(Boolean).length) {
-      throw new Error(Errors.BREAKPOINTS_MISSING)
-    }
-
-    const breakpoints = Object.entries(breakpointAttrs).reduce((acc, [k, v]) => {
-      if (!v) return acc
-
-      const matches = [...removeWhitespace(v).matchAll(BREAKPOINT_REGEX)]
-      if (!matches) return acc
-
-      acc[k] = matches.reduce((accumulator, match) => {
-        if (!match[1] || !match[2]) return accumulator
-
-        accumulator[match[1]] = +match[2]
-        return accumulator
-      }, {})
-
-      return acc
-    }, {})
+    const breakpoints = bps || this.getBreakpointsFromAttrs(element)
 
     if (!Object.values(breakpoints).filter(Boolean).length) {
       throw new Error(Errors.BREAKPOINTS_MISSING)
@@ -235,6 +221,35 @@ export default class ElementQueries {
   }
 
   // internal
+
+  getBreakpointsFromAttrs(element) {
+    const { htmlAttrBreakpoints, htmlAttrHeightBreakpoints } = this.opts
+
+    const breakpointAttrs = {
+      width: element.getAttribute(htmlAttrBreakpoints),
+      height: element.getAttribute(htmlAttrHeightBreakpoints),
+    }
+
+    if (!Object.values(breakpointAttrs).filter(Boolean).length) {
+      throw new Error(Errors.BREAKPOINTS_MISSING)
+    }
+
+    return Object.entries(breakpointAttrs).reduce((acc, [k, v]) => {
+      if (!v) return acc
+
+      const matches = [...removeWhitespace(v).matchAll(BREAKPOINT_REGEX)]
+      if (!matches) return acc
+
+      acc[k] = matches.reduce((accumulator, match) => {
+        if (!match[1] || !match[2]) return accumulator
+
+        accumulator[match[1]] = +match[2]
+        return accumulator
+      }, {})
+
+      return acc
+    }, {})
+  }
 
   static hasBreakpoints(entry) {
     return Object.values(entry.breakpoints).filter(Boolean).length > 0
