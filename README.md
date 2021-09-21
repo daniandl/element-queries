@@ -20,6 +20,10 @@ Due to ResizeObserver, Internet Explorer is not supported at all.
 You can use a polyfill but I cannot guarantee anything.  
 *More specific information will come soon.*
 
+#### Update regarding native implementation
+It seems we are finally getting closer to a native implementation of element queries in browsers!  
+https://web.dev/new-responsive/#responsive-to-the-container  
+
 ## Installation
 
 **Using NPM / Yarn**  
@@ -169,16 +173,6 @@ Disconnects the ResizeObserver and DOM observer. Also flushes the internal eleme
 * `domObserver` contains the MutationObserver (if enabled)
 * `elements` a WeakMap containing all elements that are still actively being referenced
 
-<!-- ## Motivation -->
-
-## ⚠ Disclaimer
-
-**This project is a bachelor project for my studies.**  
-This means everything is subject to change unexpectedly. I cannot guarantee the future of this library or whether I will work in "the right direction" (at least until end of April 2021 🙂).
-
-*I am, however, of course genuinely interested in this and aim to keep working on it afterwards, as I need this for my own projects.*
-
 ## Contributing
 
-Pull requests are always welcome. For major changes, please open an issue first to discuss what you have in mind.  
-Please keep the above disclaimer in mind regarding my decisions on changes.
+Pull requests are always welcome. For major changes, please open an issue first to discuss what you have in mind.
